@@ -15,6 +15,12 @@
           </a>
         </li>
 
+        <li>
+    <a href="<?php echo base_url('resep') ?>">
+        <i class="fa fa-book"></i> <span>Resep</span>
+    </a>
+</li>
+
         <?php if($user_permission): ?>
           <?php if(in_array('createUser', $user_permission) || in_array('updateUser', $user_permission) || in_array('viewUser', $user_permission) || in_array('deleteUser', $user_permission)): ?>
             <li class="treeview" id="mainUserNav">
