@@ -19,6 +19,12 @@
     <a href="<?php echo base_url('resep') ?>">
         <i class="fa fa-book"></i> <span>Resep</span>
     </a>
+    </li>
+
+    <li>
+    <a href="<?php echo base_url('produksi') ?>">
+        <i class="fa fa-industry"></i> <span>Produksi</span>
+    </a>
 </li>
 
         <?php if($user_permission): ?>
