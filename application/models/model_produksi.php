@@ -98,6 +98,20 @@ class Model_produksi extends CI_Model
         return false; // Gagal jika data produksi tidak ditemukan
     }
 
+    // FUNGSI BARU: Mengambil produk yang paling sering diproduksi
+public function getProdukPopuler($limit = 5)
+{
+    $sql = "SELECT p.name as nama_produk, COUNT(pr.id_produksi) as jumlah_kali_produksi
+            FROM produksi pr
+            JOIN products p ON pr.id_produk = p.id
+            GROUP BY pr.id_produk, p.name
+            ORDER BY jumlah_kali_produksi DESC
+            LIMIT ?";
+
+    $query = $this->db->query($sql, array($limit));
+    return $query->result_array();
+}
+
     // FUNGSI BARU 1: Mengambil data satu riwayat produksi
 public function getProduksiDataById($id)
 {

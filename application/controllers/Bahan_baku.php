@@ -58,6 +58,7 @@ class Bahan_baku extends Admin_Controller
 		$this->form_validation->set_rules('nama_bahan', 'Nama Bahan', 'trim|required');
 		$this->form_validation->set_rules('stok', 'Stok Awal', 'trim|required|numeric');
         $this->form_validation->set_rules('satuan', 'Satuan', 'trim|required');
+		$this->form_validation->set_rules('batas_kritis', 'Batas Kritis', 'trim|required|numeric|greater_than_equal_to[0]');
 
 		$this->form_validation->set_error_delimiters('<p class="text-danger">','</p>');
 
@@ -66,6 +67,7 @@ class Bahan_baku extends Admin_Controller
         		'nama_bahan' => $this->input->post('nama_bahan'),
         		'stok' => $this->input->post('stok'),	
                 'satuan' => $this->input->post('satuan'),	
+				'batas_kritis' => $this->input->post('batas_kritis'),
         	);
 
         	$create = $this->model_bahan_baku->create($data);
@@ -96,6 +98,7 @@ class Bahan_baku extends Admin_Controller
 			$this->form_validation->set_rules('edit_nama_bahan', 'Nama Bahan', 'trim|required');
 			$this->form_validation->set_rules('edit_stok', 'Stok', 'trim|required|numeric');
 			$this->form_validation->set_rules('edit_satuan', 'Satuan', 'trim|required');
+			$this->form_validation->set_rules('edit_batas_kritis', 'Batas Kritis', 'trim|required|numeric|greater_than_equal_to[0]');
 
 			$this->form_validation->set_error_delimiters('<p class="text-danger">','</p>');
 
@@ -104,6 +107,7 @@ class Bahan_baku extends Admin_Controller
 	        		'nama_bahan' => $this->input->post('edit_nama_bahan'),
 	        		'stok' => $this->input->post('edit_stok'),
                     'satuan' => $this->input->post('edit_satuan'),
+					'batas_kritis' => $this->input->post('edit_batas_kritis'),
 	        	);
 
 	        	$update = $this->model_bahan_baku->update($data, $id);

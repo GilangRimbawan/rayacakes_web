@@ -63,6 +63,12 @@
             <input type="text" class="form-control" id="satuan" name="satuan" placeholder="Contoh: gr, kg, butir, ml" autocomplete="off">
           </div>
         </div>
+        <div class="form-group">
+          <label for="batas_kritis">Batas Kritis</label>
+          <input type="number" step="0.01" class="form-control" id="batas_kritis" name="batas_kritis" placeholder="Contoh: 500 (untuk 500gr)" autocomplete="off" value="10">
+          <small>Jumlah stok minimum sebelum dianggap kritis.</small>
+        </div>
+      </div> <div class="modal-footer">
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
           <button type="submit" class="btn btn-primary">Simpan</button>
@@ -96,6 +102,12 @@
             <input type="text" class="form-control" id="edit_satuan" name="edit_satuan" placeholder="Contoh: gr, kg, butir, ml" autocomplete="off">
           </div>
         </div>
+        <div class="form-group">
+          <label for="edit_batas_kritis">Batas Kritis</label>
+          <input type="number" step="0.01" class="form-control" id="edit_batas_kritis" name="edit_batas_kritis" placeholder="Contoh: 500 (untuk 500gr)" autocomplete="off">
+           <small>Jumlah stok minimum sebelum dianggap kritis.</small>
+       </div>
+      </div> <div class="modal-footer">
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
           <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -194,6 +206,7 @@ function editBahanBaku(id)
       $("#edit_nama_bahan").val(response.nama_bahan);
       $("#edit_stok").val(response.stok);
       $("#edit_satuan").val(response.satuan);
+      $("#edit_batas_kritis").val(response.batas_kritis);
 
       $("#updateBahanBakuForm").unbind('submit').bind('submit', function() {
         var form = $(this);

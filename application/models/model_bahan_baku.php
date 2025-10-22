@@ -44,5 +44,13 @@ class Model_bahan_baku extends CI_Model
 			return ($delete == true) ? true : false;
 		}
 	}
+	public function getStokKritis($limit = 5)
+	{
+		// Stok dianggap kritis jika di bawah 100 (misalnya 100 gr)
+		// Kamu bisa sesuaikan angka '100' ini sesuai kebutuhan
+		$sql = "SELECT * FROM bahan_baku WHERE stok <= batas_kritis ORDER BY stok ASC LIMIT ?";
+		$query = $this->db->query($sql, array($limit));
+		return $query->result_array();
+	}
 
 }

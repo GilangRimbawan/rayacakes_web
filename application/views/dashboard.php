@@ -1,97 +1,92 @@
+<div class="content-wrapper">
+  <section class="content-header">
+    <h1>
+      Dashboard
+      <small>Ringkasan Sistem</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li>
+    </ol>
+  </section>
 
+  <section class="content">
+    <div class="row">
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Dashboard
-        <small>Control panel</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
-      </ol>
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-      <!-- Small boxes (Stat box) -->
-      <?php if($is_admin == true): ?>
-
-        <div class="row">
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-aqua">
-              <div class="inner">
-                <h3><?php echo $total_products ?></h3>
-
-                <p>Total Products</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="<?php echo base_url('products/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
+      <div class="col-md-6">
+        <div class="box box-warning">
+          <div class="box-header with-border">
+            <h3 class="box-title">Stok Bahan Baku Kritis (Di Bawah Batas)</h3>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-green">
-              <div class="inner">
-                <h3><?php echo $total_paid_orders ?></h3>
-
-                <p>Total Paid Orders</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="<?php echo base_url('orders/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
+          <div class="box-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nama Bahan</th>
+                  <th style="width: 20%">Sisa Stok</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php if(!empty($stok_kritis)): ?>
+                  <?php foreach ($stok_kritis as $bahan): ?>
+                    <tr>
+                      <td><?php echo $bahan['nama_bahan']; ?></td>
+                      <td><span class="badge bg-red"><?php echo $bahan['stok'] . ' ' . $bahan['satuan']; ?></span></td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr>
+                    <td colspan="2" class="text-center">
+                      <i class="fa fa-check-circle" style="color: green;"></i> Semua stok bahan baku aman.
+                    </td>
+                  </tr>
+                <?php endif; ?>
+              </tbody>
+            </table>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-yellow">
-              <div class="inner">
-                <h3><?php echo $total_users; ?></h3>
-
-                <p>Total Users</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-android-people"></i>
-              </div>
-              <a href="<?php echo base_url('users/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
+          <div class="box-footer text-center">
+            <a href="<?php echo base_url('bahan_baku') ?>" class="uppercase">Lihat Semua Bahan Baku</a>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-red">
-              <div class="inner">
-                <h3><?php echo $total_stores ?></h3>
-
-                <p>Total Stores</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-android-home"></i>
-              </div>
-              <a href="<?php echo base_url('stores/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
         </div>
-        <!-- /.row -->
-      <?php endif; ?>
-      
+      </div>
 
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+      <div class="col-md-6">
+        <div class="box box-info">
+          <div class="box-header with-border">
+            <h3 class="box-title">5 Produk Paling Sering Diproduksi</h3>
+          </div>
+          <div class="box-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nama Produk Kue</th>
+                  <th style="width: 30%">Jumlah Produksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php if(!empty($produk_populer)): ?>
+                  <?php foreach ($produk_populer as $produk): ?>
+                    <tr>
+                      <td><?php echo $produk['nama_produk']; ?></td>
+                      <td><span class="badge bg-blue"><?php echo $produk['jumlah_kali_produksi']; ?> Kali</span></td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr>
+                    <td colspan="2" class="text-center">
+                      <i class="fa fa-info-circle"></i> Belum ada data produksi.
+                    </td>
+                  </tr>
+                <?php endif; ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="box-footer text-center">
+            <a href="<?php echo base_url('produksi') ?>" class="uppercase">Lihat Riwayat Produksi</a>
+          </div>
+        </div>
+      </div>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $("#dashboardMainMenu").addClass('active');
-    }); 
-  </script>
+    </div>
+  </section>
+</div>
