@@ -7,18 +7,18 @@ class Model_groups extends CI_Model
 		parent::__construct();
 	}
 
-	public function getGroupData($groupId = null) 
-	{
-		if($groupId) {
-			$sql = "SELECT * FROM groups WHERE id = ?";
-			$query = $this->db->query($sql, array($groupId));
-			return $query->row_array();
-		}
+public function getGroupData($id = null)
+{
+    if($id) {
+        $sql = "SELECT * FROM `groups` WHERE id = ?"; // Tambahkan backticks
+        $query = $this->db->query($sql, array($id));
+        return $query->row_array();
+    }
 
-		$sql = "SELECT * FROM groups WHERE id != ?";
-		$query = $this->db->query($sql, array(1));
-		return $query->result_array();
-	}
+    $sql = "SELECT * FROM `groups` WHERE id != 1"; // Tambahkan backticks
+    $query = $this->db->query($sql);
+    return $query->result_array();
+}
 
 	public function create($data = '')
 	{

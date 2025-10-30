@@ -1,58 +1,54 @@
-<?php  
+<?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Reports extends Admin_Controller 
-{	
-	public function __construct()
-	{
-		parent::__construct();
-		$this->data['page_title'] = 'Stores';
-		$this->load->model('model_reports');
-	}
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->not_logged_in();
+        $this->data['page_title'] = 'Laporan';
 
-	/* 
-    * It redirects to the report page
-    * and based on the year, all the orders data are fetch from the database.
-    */
-	public function index()
-	{
-		if(!in_array('viewReports', $this->permission)) {
-            redirect('dashboard', 'refresh');
-        }
-		
-		$today_year = date('Y');
+        $this->load->model('model_bahan_baku');
+        $this->load->model('model_produksi');
+    }
 
-		if($this->input->post('select_year')) {
-			$today_year = $this->input->post('select_year');
-		}
+    // Halaman utama (menu) untuk semua laporan
+    public function index()
+    {
+        $this->render_template('reports/index', $this->data);
+    }
 
-		$parking_data = $this->model_reports->getOrderData($today_year);
-		$this->data['report_years'] = $this->model_reports->getOrderYear();
-		
+    // Halaman Laporan Stok Bahan Baku (Sudah ada)
+    public function stok_bahan_baku()
+    {
+        $this->data['stok_data'] = $this->model_bahan_baku->getBahanBakuData();
+        $this->render_template('reports/stok_bahan_baku', $this->data);
+    }
 
-		$final_parking_data = array();
-		foreach ($parking_data as $k => $v) {
-			
-			if(count($v) > 1) {
-				$total_amount_earned = array();
-				foreach ($v as $k2 => $v2) {
-					if($v2) {
-						$total_amount_earned[] = $v2['gross_amount'];						
-					}
-				}
-				$final_parking_data[$k] = array_sum($total_amount_earned);	
-			}
-			else {
-				$final_parking_data[$k] = 0;	
-			}
-			
-		}
-		
-		$this->data['selected_year'] = $today_year;
-		$this->data['company_currency'] = $this->company_currency();
-		$this->data['results'] = $final_parking_data;
+    // FUNGSI BARU: Halaman Laporan Produksi
+public function produksi()
+{
+    $this->data['produksi_data'] = null; // Defaultnya data kosong
+    $this->data['tanggal_mulai'] = null;
+    $this->data['tanggal_selesai'] = null;
 
-		$this->render_template('reports/index', $this->data);
-	}
-}	
+    // Cek apakah form filter telah disubmit (metode POST)
+    if ($this->input->post()) {
+        $tanggal_mulai = $this->input->post('tanggal_mulai');
+        $tanggal_selesai = $this->input->post('tanggal_selesai');
+
+        // Panggil fungsi baru di model untuk mengambil data
+        $data_laporan = $this->model_produksi->getProduksiByDateRange($tanggal_mulai, $tanggal_selesai);
+
+        // Kirim data hasil filter ke view
+        $this->data['produksi_data'] = $data_laporan;
+        $this->data['tanggal_mulai'] = $tanggal_mulai;
+        $this->data['tanggal_selesai'] = $tanggal_selesai;
+    }
+
+    // Tampilkan view laporan
+    $this->render_template('reports/produksi', $this->data);
+}
+}

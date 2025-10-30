@@ -16,6 +16,22 @@ class Model_produksi extends CI_Model
         return $query->result_array();
     }
 
+    // FUNGSI BARU: Mengambil data produksi berdasarkan rentang tanggal
+public function getProduksiByDateRange($tanggal_mulai, $tanggal_selesai)
+{
+    // Menambahkan '23:59:59' ke tanggal selesai agar mencakup seluruh hari itu
+    $tanggal_selesai_full = $tanggal_selesai . ' 23:59:59';
+
+    $sql = "SELECT produksi.*, products.name as nama_produk 
+            FROM produksi
+            JOIN products ON produksi.id_produk = products.id
+            WHERE produksi.tanggal_produksi BETWEEN ? AND ?
+            ORDER BY produksi.tanggal_produksi DESC";
+
+    $query = $this->db->query($sql, array($tanggal_mulai, $tanggal_selesai_full));
+    return $query->result_array();
+}
+
     public function create()
     {
         // 1. Ambil data dari form

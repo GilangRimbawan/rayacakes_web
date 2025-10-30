@@ -8,19 +8,13 @@ class Groups extends Admin_Controller
 
 		$this->not_logged_in();
 
-		$this->data['page_title'] = 'Groups';
+		$this->data['page_title'] = 'Hak Akses'; // Diganti
 		
-
 		$this->load->model('model_groups');
 	}
 
-	/* 
-	* It redirects to the manage group page
-	* As well as the group data is also been passed to display on the view page
-	*/
 	public function index()
 	{
-
 		if(!in_array('viewGroup', $this->permission)) {
 			redirect('dashboard', 'refresh');
 		}
@@ -31,19 +25,13 @@ class Groups extends Admin_Controller
 		$this->render_template('groups/index', $this->data);
 	}	
 
-	/*
-	* If the validation is not valid, then it redirects to the create page.
-	* If the validation is for each input field is valid then it inserts the data into the database 
-	* and it stores the operation message into the session flashdata and display on the manage group page
-	*/
 	public function create()
 	{
-
 		if(!in_array('createGroup', $this->permission)) {
 			redirect('dashboard', 'refresh');
 		}
 
-		$this->form_validation->set_rules('group_name', 'Group name', 'required');
+		$this->form_validation->set_rules('group_name', 'Nama Hak Akses', 'required'); // Diganti
 
         if ($this->form_validation->run() == TRUE) {
             // true case
@@ -56,11 +44,11 @@ class Groups extends Admin_Controller
 
         	$create = $this->model_groups->create($data);
         	if($create == true) {
-        		$this->session->set_flashdata('success', 'Successfully created');
+        		$this->session->set_flashdata('success', 'Hak akses berhasil dibuat'); // Diganti
         		redirect('groups/', 'refresh');
         	}
         	else {
-        		$this->session->set_flashdata('errors', 'Error occurred!!');
+        		$this->session->set_flashdata('errors', 'Terjadi error!!'); // Diganti
         		redirect('groups/create', 'refresh');
         	}
         }
@@ -70,21 +58,15 @@ class Groups extends Admin_Controller
         }	
 	}
 
-	/*
-	* If the validation is not valid, then it redirects to the edit group page 
-	* If the validation is successfully then it updates the data into the database 
-	* and it stores the operation message into the session flashdata and display on the manage group page
-	*/
 	public function edit($id = null)
 	{
-
 		if(!in_array('updateGroup', $this->permission)) {
 			redirect('dashboard', 'refresh');
 		}
 
 		if($id) {
 
-			$this->form_validation->set_rules('group_name', 'Group name', 'required');
+			$this->form_validation->set_rules('group_name', 'Nama Hak Akses', 'required'); // Diganti
 
 			if ($this->form_validation->run() == TRUE) {
 	            // true case
@@ -97,11 +79,11 @@ class Groups extends Admin_Controller
 
 	        	$update = $this->model_groups->edit($data, $id);
 	        	if($update == true) {
-	        		$this->session->set_flashdata('success', 'Successfully updated');
+	        		$this->session->set_flashdata('success', 'Hak akses berhasil diperbarui'); // Diganti
 	        		redirect('groups/', 'refresh');
 	        	}
 	        	else {
-	        		$this->session->set_flashdata('errors', 'Error occurred!!');
+	        		$this->session->set_flashdata('errors', 'Terjadi error!!'); // Diganti
 	        		redirect('groups/edit/'.$id, 'refresh');
 	        	}
 	        }
@@ -114,13 +96,8 @@ class Groups extends Admin_Controller
 		}
 	}
 
-	/*
-	* It removes the removes information from the database 
-	* and it stores the operation message into the session flashdata and display on the manage group page
-	*/
 	public function delete($id)
 	{
-
 		if(!in_array('deleteGroup', $this->permission)) {
 			redirect('dashboard', 'refresh');
 		}
@@ -130,17 +107,17 @@ class Groups extends Admin_Controller
 
 				$check = $this->model_groups->existInUserGroup($id);
 				if($check == true) {
-					$this->session->set_flashdata('error', 'Group exists in the users');
+					$this->session->set_flashdata('error', 'Gagal hapus! Hak akses ini masih digunakan oleh pengguna.'); // Diganti
 	        		redirect('groups/', 'refresh');
 				}
 				else {
 					$delete = $this->model_groups->delete($id);
 					if($delete == true) {
-		        		$this->session->set_flashdata('success', 'Successfully removed');
+		        		$this->session->set_flashdata('success', 'Hak akses berhasil dihapus'); // Diganti
 		        		redirect('groups/', 'refresh');
 		        	}
 		        	else {
-		        		$this->session->set_flashdata('error', 'Error occurred!!');
+		        		$this->session->set_flashdata('error', 'Terjadi error!!'); // Diganti
 		        		redirect('groups/delete/'.$id, 'refresh');
 		        	}
 				}	
@@ -151,6 +128,4 @@ class Groups extends Admin_Controller
 			}	
 		}
 	}
-
-
 }
