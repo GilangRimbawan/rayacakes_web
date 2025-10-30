@@ -2,86 +2,97 @@
 
 class Model_users extends CI_Model
 {
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	public function getUserData($userId = null) 
-	{
-		if($userId) {
-			$sql = "SELECT * FROM users WHERE id = ?";
-			$query = $this->db->query($sql, array($userId));
-			return $query->row_array();
-		}
+    public function getUserData($userId = null) 
+    {
+        if($userId) {
+            $sql = "SELECT * FROM users WHERE id = ?";
+            $query = $this->db->query($sql, array($userId));
+            return $query->row_array();
+        }
 
-		$sql = "SELECT * FROM users WHERE id != ?";
-		$query = $this->db->query($sql, array(1));
-		return $query->result_array();
-	}
+        $sql = "SELECT * FROM users WHERE id != ?";
+        $query = $this->db->query($sql, array(1));
+        return $query->result_array();
+    }
 
-	public function getUserGroup($userId = null) 
-	{
-		if($userId) {
-			$sql = "SELECT * FROM user_group WHERE user_id = ?";
-			$query = $this->db->query($sql, array($userId));
-			$result = $query->row_array();
+public function getUserGroup($userId = null) 
+{
+    if($userId) {
+        $sql = "SELECT * FROM user_group WHERE user_id = ?";
+        $query = $this->db->query($sql, array($userId));
+        $result = $query->row_array();
 
-			$group_id = $result['group_id'];
-			$g_sql = "SELECT * FROM groups WHERE id = ?";
-			$g_query = $this->db->query($g_sql, array($group_id));
-			$q_result = $g_query->row_array();
-			return $q_result;
-		}
-	}
+        // Cek jika user tidak punya grup (untuk menghindari error)
+        if(isset($result['group_id'])) {
+            $group_id = $result['group_id'];
 
-	public function create($data = '', $group_id = null)
-	{
+            // ===============================================
+            // INI ADALAH PERBAIKANNYA (Menambahkan backticks ``)
+            // ===============================================
+            $g_sql = "SELECT * FROM `groups` WHERE id = ?";
 
-		if($data && $group_id) {
-			$create = $this->db->insert('users', $data);
+            $g_query = $this->db->query($g_sql, array($group_id));
+            $q_result = $g_query->row_array();
+            return $q_result;
+        } else {
+            // Jika user tidak punya grup, kembalikan null agar tidak error
+            return null; 
+        }
+    }
+}
 
-			$user_id = $this->db->insert_id();
+    public function create($data = '', $group_id = null)
+    {
 
-			$group_data = array(
-				'user_id' => $user_id,
-				'group_id' => $group_id
-			);
+        if($data && $group_id) {
+            $create = $this->db->insert('users', $data);
 
-			$group_data = $this->db->insert('user_group', $group_data);
+            $user_id = $this->db->insert_id();
 
-			return ($create == true && $group_data) ? true : false;
-		}
-	}
+            $group_data = array(
+                'user_id' => $user_id,
+                'group_id' => $group_id
+            );
 
-	public function edit($data = array(), $id = null, $group_id = null)
-	{
-		$this->db->where('id', $id);
-		$update = $this->db->update('users', $data);
+            $group_data = $this->db->insert('user_group', $group_data);
 
-		if($group_id) {
-			// user group
-			$update_user_group = array('group_id' => $group_id);
-			$this->db->where('user_id', $id);
-			$user_group = $this->db->update('user_group', $update_user_group);
-			return ($update == true && $user_group == true) ? true : false;	
-		}
-			
-		return ($update == true) ? true : false;	
-	}
+            return ($create == true && $group_data) ? true : false;
+        }
+    }
 
-	public function delete($id)
-	{
-		$this->db->where('id', $id);
-		$delete = $this->db->delete('users');
-		return ($delete == true) ? true : false;
-	}
+    public function edit($data = array(), $id = null, $group_id = null)
+    {
+        $this->db->where('id', $id);
+        $update = $this->db->update('users', $data);
 
-	public function countTotalUsers()
-	{
-		$sql = "SELECT * FROM users";
-		$query = $this->db->query($sql);
-		return $query->num_rows();
-	}
-	
+        if($group_id) {
+            // user group
+            $update_user_group = array('group_id' => $group_id);
+            $this->db->where('user_id', $id);
+            $user_group = $this->db->update('user_group', $update_user_group);
+            return ($update == true && $user_group == true) ? true : false; 
+        }
+            
+        return ($update == true) ? true : false;    
+    }
+
+    public function delete($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('users');
+        return ($delete == true) ? true : false;
+    }
+
+    public function countTotalUsers()
+    {
+        $sql = "SELECT * FROM users";
+        $query = $this->db->query($sql);
+        return $query->num_rows();
+    }
+    
 }
