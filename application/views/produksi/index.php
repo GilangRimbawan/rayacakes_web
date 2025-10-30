@@ -16,16 +16,18 @@
 
         <div id="messages"></div>
         <?php if($this->session->flashdata('success')): ?>
-          <div class="alert alert-success alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <?php echo $this->session->flashdata('success'); ?>
-          </div>
-        <?php elseif($this->session->flashdata('error')): ?>
-          <div class="alert alert-error alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <?php echo $this->session->flashdata('error'); ?>
-          </div>
-        <?php endif; ?>
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <?php echo $this->session->flashdata('success'); ?>
+  </div>
+  <?php $this->session->set_flashdata('success', null); // Baris ini membersihkan notif ?>
+<?php elseif($this->session->flashdata('error')): ?>
+  <div class="alert alert-error alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <?php echo $this->session->flashdata('error'); ?>
+  </div>
+  <?php $this->session->set_flashdata('error', null); // Baris ini membersihkan notif ?>
+<?php endif; ?>
 
         <a href="<?php echo base_url('produksi/create') ?>" class="btn btn-primary">Tambah Data Produksi</a>
         <br /> <br />
