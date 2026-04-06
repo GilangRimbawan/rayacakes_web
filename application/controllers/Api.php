@@ -6,26 +6,72 @@ class Api extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
+        
+        // 1. TAMBAHAN: Header CORS (Cross-Origin Resource Sharing)
+        // Ini sangat penting agar aplikasi Flutter diizinkan mengambil data dari CI
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+        header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding");
+
         // Kita muat model-model yang datanya ingin kita ambil
         $this->load->model('model_bahan_baku');
         $this->load->model('model_resep');
         $this->load->model('model_produksi');
         $this->load->model('model_products');
+        
+        // Catatan: Jika kamu punya model khusus untuk user/admin (misal: model_users), 
+        // pastikan di-load juga di sini untuk keperluan fungsi login di bawah.
+        // $this->load->model('model_users'); 
     }
 
-    // Endpoint pertama kita: mengambil semua data bahan baku
+    // 2. TAMBAHAN: Endpoint Login
+    public function login()
+    {
+        // Ambil data JSON (username & password) yang dikirim dari Flutter
+        $json_data = json_decode(file_get_contents('php://input'), true);
+
+        if ($json_data) {
+            $username = $json_data['username'];
+            $password = $json_data['password'];
+
+            // --- PERHATIAN: BAGIAN INI HARUS DISESUAIKAN ---
+            // Idealnya, kamu mengecek ke database melalui model. Contoh:
+            // $user = $this->model_users->cek_login($username, $password);
+            // if($user) { ... }
+            
+            // KARENA SAYA TIDAK TAHU STRUKTUR TABEL USER-MU, 
+            // Ini adalah logika bypass sementara. Silakan ganti dengan logika aslimu.
+            if ($username === 'admin' && $password === 'admin123') {
+                $response = array(
+                    'status' => 'success', 
+                    'message' => 'Login berhasil',
+                    'data' => array(
+                        'username' => $username,
+                        'role' => 'admin' // Bisa disesuaikan
+                    )
+                );
+            } else {
+                $response = array('status' => 'error', 'message' => 'Username atau password salah');
+            }
+        } else {
+            $response = array('status' => 'error', 'message' => 'Data tidak lengkap atau format salah');
+        }
+
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode($response));
+    }
+
+    // Endpoint mengambil semua data bahan baku
     public function bahan_baku()
     {
-        // Panggil data dari model yang sudah ada
         $data = $this->model_bahan_baku->getBahanBakuData();
-
-        // Perintahkan CodeIgniter untuk mengeluarkan output sebagai JSON
         $this->output
              ->set_content_type('application/json')
              ->set_output(json_encode($data));
     }
 
-    // Endpoint kedua: mengambil semua data produk kue
+    // Endpoint mengambil semua data produk kue
     public function produk_kue()
     {
         $data = $this->model_products->getProductData();
@@ -34,25 +80,19 @@ class Api extends CI_Controller {
              ->set_output(json_encode($data));
     }
 
+    // Endpoint menambah produksi
     public function tambah_produksi()
     {
-        // 1. Ambil data JSON yang dikirim oleh aplikasi mobile
         $json_data = json_decode(file_get_contents('php://input'), true);
 
-        // 2. Set data JSON itu ke dalam $_POST agar bisa dibaca oleh model kita
-        // Ini adalah 'jembatan' agar kita tidak perlu mengubah model
         if ($json_data) {
-            // Pastikan nama key-nya konsisten
             $_POST['resep'] = $json_data['id_resep']; 
             $_POST['jumlah'] = $json_data['jumlah_produksi'];
-            $_POST['catatan'] = $json_data['catatan'] ?? null; // Opsional
+            $_POST['catatan'] = $json_data['catatan'] ?? null;
         }
 
-        // 3. Panggil fungsi model_produksi->create() yang SUDAH ADA
-        // Model ini akan membaca data dari $_POST yang baru saja kita isi
         $create = $this->model_produksi->create();
 
-        // 4. Kirim balasan (response) ke aplikasi mobile dalam format JSON
         if($create == true) {
             $response = array('status' => 'success', 'message' => 'Produksi berhasil ditambahkan');
         } else {
@@ -64,16 +104,13 @@ class Api extends CI_Controller {
              ->set_output(json_encode($response));
     }
 
+    // Endpoint mengambil resep
     public function resep()
-{
-    // 1. Panggil data dari model yang sudah ada
-    // (model_resep sudah kita muat di __construct)
-    // Fungsi getResepData() ini sudah otomatis mengambil nama produknya
-    $data = $this->model_resep->getResepData();
+    {
+        $data = $this->model_resep->getResepData();
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode($data));
+    }
 
-    // 2. Kirim balasan (response) ke aplikasi mobile dalam format JSON
-    $this->output
-         ->set_content_type('application/json')
-         ->set_output(json_encode($data));
-}
-}
+} 
