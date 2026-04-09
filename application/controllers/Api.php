@@ -113,4 +113,26 @@ class Api extends CI_Controller {
              ->set_output(json_encode($data));
     }
 
+    // Endpoint mengambil total produksi hari ini
+public function total_hari_ini()
+    {
+        $hari_ini = date('Y-m-d');
+        
+        
+        $this->db->select_sum('jumlah_produksi', 'total_angka'); 
+        
+        $this->db->where('DATE(tanggal_produksi)', $hari_ini); 
+        $query = $this->db->get('produksi'); 
+        
+        $result = $query->row();
+        
+        // Karena kita pakai alias 'total_angka', bagian bawah ini tidak perlu diubah-ubah lagi
+        $total = $result->total_angka ? (int)$result->total_angka : 0;
+
+        $response = array('status' => 'success', 'total' => $total);
+
+        $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode($response));
+    }
 } 
