@@ -135,4 +135,31 @@ public function total_hari_ini()
          ->set_content_type('application/json')
          ->set_output(json_encode($response));
     }
+
+    // Endpoint mengambil data laporan produksi dengan filter tanggal
+    public function laporan_produksi()
+    {
+        $tgl_awal = $this->input->get('tgl_awal');
+        $tgl_akhir = $this->input->get('tgl_akhir');
+
+        // Ambil semua dari tabel produksi, dan ambil nama_resep dari tabel resep
+        $this->db->select('produksi.*, resep.nama_resep'); 
+        $this->db->from('produksi');
+        
+        // INI KUNCI JAWABANNYA: Relasi menggunakan kolom id_produk yang ada di kedua tabel
+        $this->db->join('resep', 'resep.id_produk = produksi.id_produk', 'left');
+
+        if (!empty($tgl_awal) && !empty($tgl_akhir)) {
+            $this->db->where('DATE(produksi.tanggal_produksi) >=', $tgl_awal);
+            $this->db->where('DATE(produksi.tanggal_produksi) <=', $tgl_akhir);
+        }
+
+        $this->db->order_by('produksi.tanggal_produksi', 'DESC');
+        $query = $this->db->get();
+        $data = $query->result_array();
+
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode($data));
+    }
 } 
