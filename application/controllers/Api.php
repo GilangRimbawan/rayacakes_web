@@ -91,12 +91,16 @@ class Api extends CI_Controller {
             $_POST['catatan'] = $json_data['catatan'] ?? null;
         }
 
+        // $create sekarang menerima array: ['status' => true/false, 'message' => '...']
         $create = $this->model_produksi->create();
 
-        if($create == true) {
-            $response = array('status' => 'success', 'message' => 'Produksi berhasil ditambahkan');
+        // Cek status dari array yang dikembalikan model
+        if(isset($create['status']) && $create['status'] === true) {
+            $response = array('status' => 'success', 'message' => $create['message']);
         } else {
-            $response = array('status' => 'error', 'message' => 'Gagal menambahkan produksi');
+            // Tangkap pesan error detail dari model, atau gunakan pesan default jika kosong
+            $pesan_error = isset($create['message']) ? $create['message'] : 'Gagal menambahkan produksi';
+            $response = array('status' => 'error', 'message' => $pesan_error);
         }
 
         $this->output

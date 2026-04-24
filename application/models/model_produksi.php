@@ -39,18 +39,37 @@ public function getProduksiByDateRange($tanggal_mulai, $tanggal_selesai)
         $jumlah_produksi = $this->input->post('jumlah');
 
         // 2. Ambil detail resep dari database
-        // Kita butuh tahu produk apa yg dibuat & bahan apa saja yg dibutuhkan
         $this->load->model('model_resep');
         $resep = $this->model_resep->getResepDataById($id_resep);
         $resep_detail = $this->model_resep->getResepDetailData($id_resep);
         $id_produk = $resep['id_produk'];
 
-        // 3. Kurangi stok bahan baku (LOOPING)
+        // --- TAHAP BARU: VALIDASI STOK SEBELUM DIPOTONG ---
+        // Kita periksa semua bahan baku satu per satu
         foreach ($resep_detail as $bahan) {
             $id_bahan = $bahan['id_bahan'];
-            $jumlah_dibutuhkan = $bahan['jumlah'] * $jumlah_produksi; // total bahan yg dipakai
+            $jumlah_dibutuhkan = $bahan['jumlah'] * $jumlah_produksi;
 
-            // Query untuk mengurangi stok bahan baku
+            // Ambil data stok bahan baku saat ini dari database
+            $this->db->select('nama_bahan, stok');
+            $this->db->where('id_bahan', $id_bahan);
+            $cek_bahan = $this->db->get('bahan_baku')->row_array();
+
+            // Jika stok HANYA SATU bahan saja kurang, gagalkan seluruh proses
+            if ($cek_bahan['stok'] < $jumlah_dibutuhkan) {
+                return array(
+                    'status' => false, 
+                    'message' => "Gagal! Stok " . $cek_bahan['nama_bahan'] . " tidak cukup. (Sisa: " . $cek_bahan['stok'] . ", Butuh: " . $jumlah_dibutuhkan . ")"
+                );
+            }
+        }
+        // --- AKHIR VALIDASI ---
+
+        // 3. Kurangi stok bahan baku (Karena sudah lolos validasi, aman dipotong)
+        foreach ($resep_detail as $bahan) {
+            $id_bahan = $bahan['id_bahan'];
+            $jumlah_dibutuhkan = $bahan['jumlah'] * $jumlah_produksi; 
+
             $sql_bahan = "UPDATE bahan_baku SET stok = stok - ? WHERE id_bahan = ?";
             $this->db->query($sql_bahan, array($jumlah_dibutuhkan, $id_bahan));
         }
@@ -68,7 +87,7 @@ public function getProduksiByDateRange($tanggal_mulai, $tanggal_selesai)
         );
         $this->db->insert('produksi', $data_produksi);
 
-        return true; // Anggap selalu berhasil
+        return array('status' => true, 'message' => 'Produksi berhasil disimpan');
     }
 
     public function remove($id_produksi)
