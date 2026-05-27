@@ -74,13 +74,6 @@ Ikuti langkah-langkah berikut untuk menjalankan aplikasi di komputer lokal:
 5. **Jalankan Aplikasi**
    - Buka browser dan akses URL: `http://localhost/imsv2`
 
-## Tangkapan Layar (Screenshots)
-
-*(Ganti URL gambar di bawah dengan gambar asli aplikasi dari folder `assets` atau screenshot Anda)*
-
-| Halaman Dashboard | Halaman Data Barang |
-| :---: | :---: |
-| <img src="https://via.placeholder.com/500x300.png?text=Screenshot+Dashboard+Aplikasi" alt="Dashboard" /> | <img src="https://via.placeholder.com/500x300.png?text=Screenshot+Data+Barang" alt="Data Barang" /> |
 
 ## Pengembang
 
