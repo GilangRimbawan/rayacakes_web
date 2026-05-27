@@ -1,84 +1,264 @@
 <div align="center">
-  <h1>Website Inventory (IMS v2)</h1>
-  <p>
-    <strong>Aplikasi Manajemen Inventaris Berbasis Web - Projek Skripsi</strong>
-  </p>
-  <p>
-    <img src="https://img.shields.io/badge/CodeIgniter-3.x-EF4223?style=flat-square&logo=codeigniter&logoColor=white" alt="CodeIgniter 3" />
-    <img src="https://img.shields.io/badge/PHP-7.4+-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP Version" />
-    <img src="https://img.shields.io/badge/MySQL-Database-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL" />
-    <img src="https://img.shields.io/badge/Bootstrap-Framework-563D7C?style=flat-square&logo=bootstrap&logoColor=white" alt="Bootstrap" />
-  </p>
+
+# Website Inventory (IMS v2)
+## Backend API & Sistem Inventory Produksi
+
+### Projek Tugas Akhir / Skripsi
+
+<br>
+
+![CodeIgniter](https://img.shields.io/badge/CodeIgniter-3.x-EF4223?style=for-the-badge&logo=codeigniter&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-7.4+-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+
 </div>
 
 ---
 
-## Deskripsi Proyek
+# Tentang Proyek
 
-**Website Inventory (IMS v2)** adalah sebuah Sistem Manajemen Inventaris yang dibangun sebagai bagian dari Projek Skripsi. Aplikasi ini dirancang untuk memudahkan pencatatan, pelacakan, dan pengelolaan barang secara digital, efisien, dan terstruktur.
+Website Inventory (IMS v2) merupakan sistem manajemen inventaris berbasis web yang dibangun menggunakan CodeIgniter 3.
 
-## Fitur Utama
+Sistem ini memiliki dua fungsi utama:
 
-- **Autentikasi Pengguna**: Sistem login yang aman dengan pembagian hak akses (Role-based access).
-- **Manajemen Barang**: Tambah, edit, hapus, dan lihat data barang dengan mudah.
-- **Barang Masuk & Keluar**: Pencatatan transaksi stok barang masuk dan keluar secara real-time.
-- **Laporan Terintegrasi**: Pembuatan laporan inventaris yang bisa di-export ke format cetak, PDF, atau Excel.
-- **Desain Responsif**: Antarmuka pengguna (UI) yang nyaman diakses melalui perangkat desktop maupun mobile.
+1. Sebagai dashboard administrasi inventaris berbasis web
+2. Sebagai Backend REST API untuk aplikasi mobile Flutter
 
-## Teknologi yang Digunakan
+Aplikasi menggunakan arsitektur Client-Server dan melakukan komunikasi data menggunakan format JSON.
 
-- **Backend**: [CodeIgniter 3](https://codeigniter.com/userguide3/) (PHP Framework)
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap
-- **Database**: MySQL
-- **Web Server**: Apache (via Laragon / XAMPP)
+---
 
-## Prasyarat (Prerequisites)
+# Repository Mobile Frontend
 
-Sebelum menjalankan aplikasi ini, pastikan sistem Anda memiliki:
-- **PHP** (disarankan versi 7.4)
-- **MySQL** Database Server
-- **Web Server** (Apache/Nginx, terintegrasi di Laragon atau XAMPP)
+Raya Cakes App (Flutter):  
+https://github.com/GilangRimbawan/rayacakes_app.git
 
-## Panduan Instalasi (Localhost)
+---
 
-Ikuti langkah-langkah berikut untuk menjalankan aplikasi di komputer lokal:
+# Fitur Utama Backend
 
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/GilangRimbawan/websiteinvemtory.git
-   ```
+## Secure CORS Handler
 
-2. **Pindahkan ke Direktori Web Server**
-   - Pindahkan folder proyek ke `htdocs` (jika menggunakan XAMPP) atau `www` (jika menggunakan Laragon).
-   - Pastikan nama foldernya adalah `imsv2` (sesuai URL localhost Anda).
+Backend telah dikonfigurasi dengan:
+- Header CORS khusus
+- Dukungan request:
+  - GET
+  - POST
+  - OPTIONS
 
-3. **Konfigurasi Database**
-   - Buka phpMyAdmin (`http://localhost/phpmyadmin`).
-   - Buat database baru (contoh: `db_inventory` atau sesuaikan dengan file SQL Anda).
-   - Import file SQL yang berada di dalam folder `DATABASE_FILE/` ke database yang baru dibuat.
+Memungkinkan aplikasi Flutter berkomunikasi secara aman di jaringan lokal.
 
-4. **Konfigurasi Sistem (CodeIgniter)**
-   - Buka file `application/config/database.php`.
-   - Sesuaikan konfigurasi database:
-     ```php
-     'hostname' => 'localhost',
-     'username' => 'root', // Sesuaikan dengan user mysql Anda
-     'password' => '',     // Kosongkan jika default
-     'database' => 'nama_database_anda', // Nama database yang Anda buat
-     ```
-   - Buka file `application/config/config.php` dan pastikan `base_url` sudah sesuai dengan path lokal Anda:
-     ```php
-     $config['base_url'] = 'http://localhost/imsv2/';
-     ```
+---
 
-5. **Jalankan Aplikasi**
-   - Buka browser dan akses URL: `http://localhost/imsv2`
+## Autentikasi API
 
+Menyediakan endpoint login untuk:
+- Validasi akun pengguna
+- Kontrol akses aplikasi mobile
 
-## Pengembang
+---
 
-- **Gilang Rimbawan** - *Projek Skripsi* - [Profil GitHub](https://github.com/GilangRimbawan)
+## Engine Produksi & Transaksi Otomatis
 
-## Lisensi
+### create()
 
-Proyek ini didistribusikan di bawah Lisensi MIT. Lihat file `license.txt` untuk informasi lebih lanjut.
+Berfungsi untuk:
+- Menerima data resep
+- Menghitung kebutuhan bahan baku
+- Mengurangi stok gudang
+- Menambahkan stok produk jadi
+
+---
+
+### remove()
+
+Berfungsi untuk:
+- Membatalkan histori produksi
+- Mengembalikan stok bahan baku
+- Mengurangi stok produk jadi
+
+---
+
+# Proteksi Integritas Data
+
+Sistem menggunakan mekanisme Pre-Check Validation.
+
+Sebelum transaksi database dijalankan:
+- Sistem mengecek seluruh stok bahan
+- Validasi dilakukan di level backend
+- Transaksi dibatalkan jika stok tidak cukup
+
+Jika validasi gagal:
+- Database tidak akan dimanipulasi
+- API mengirim response error JSON ke Flutter
+
+Tujuan:
+- Mencegah stok minus
+- Menjaga konsistensi data inventaris
+
+---
+
+# Sistem Laporan
+
+Backend menyediakan endpoint:
+- Rekap laporan produksi
+- Filter berdasarkan tanggal
+- Data histori produksi
+
+Digunakan untuk:
+- Administrasi
+- Monitoring produksi
+- Pelaporan pemilik usaha
+
+---
+
+# Instalasi Localhost
+
+## 1. Clone Repository
+
+Clone project ke direktori web server:
+
+```bash
+git clone https://github.com/GilangRimbawan/rayacakes_web.git
+````
+
+---
+
+## 2. Rename Folder Project
+
+Ubah nama folder menjadi:
+
+```text
+imsv2
+```
+
+Agar sesuai dengan konfigurasi endpoint API.
+
+---
+
+# Konfigurasi Database
+
+## 1. Buat Database Baru
+
+nama database:
+
+```text
+stock_v2
+```
+
+---
+
+## 2. Import File SQL
+
+Import file SQL yang berada pada folder:
+
+```text
+DATABASE_FILE/
+```
+
+---
+
+## 3. Konfigurasi Database
+
+Buka file:
+
+```text
+application/config/database.php
+```
+
+Sesuaikan konfigurasi berikut:
+
+```php
+'hostname' => 'localhost',
+'username' => 'root',
+'password' => '',
+'database' => 'stock_v2',
+```
+
+---
+
+# Konfigurasi Base URL
+
+Buka file:
+
+```text
+application/config/config.php
+```
+
+Lalu ubah:
+
+```php
+$config['base_url'] = 'http://localhost/imsv2/';
+```
+
+---
+
+# Testing Endpoint API
+
+Contoh endpoint:
+
+```text
+http://localhost/imsv2/index.php/api/bahan_baku
+```
+
+Test menggunakan:
+
+* Browser
+* Postman
+* Flutter App
+
+---
+
+# Struktur Inti MVC
+
+## Controller
+
+```text
+application/controllers/Api.php
+```
+
+Berfungsi sebagai:
+
+* Endpoint API utama
+* Handler request JSON
+* Routing laporan
+* Konfigurasi CORS
+
+---
+
+## Model
+
+```text
+application/models/Model_produksi.php
+```
+
+Berisi:
+
+* Logika bisnis produksi
+* Kalkulasi bahan baku
+* Fungsi pembatalan produksi
+* Sistem anti stok minus
+
+---
+
+# Teknologi yang Digunakan
+
+* CodeIgniter 3
+* PHP 7.4+
+* MySQL
+* Bootstrap
+* REST API
+* JSON
+
+---
+
+# Developer
+
+<div align="center">
+
+### Projek Tugas Akhir / Skripsi
+
+### Gilang Akhbara Rimbawan
+
+</div>

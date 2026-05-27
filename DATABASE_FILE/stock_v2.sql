@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 22, 2024 at 12:24 PM
--- Server version: 5.7.25
--- PHP Version: 7.3.1
+-- Generation Time: May 27, 2026 at 02:29 PM
+-- Server version: 8.0.30
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -27,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `attributes` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `active` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -39,17 +40,27 @@ CREATE TABLE `attributes` (
 --
 
 CREATE TABLE `attribute_value` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `value` varchar(255) NOT NULL,
-  `attribute_parent_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `attribute_parent_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `attribute_value`
+-- Table structure for table `bahan_baku`
 --
 
-INSERT INTO `attribute_value` (`id`, `value`, `attribute_parent_id`) VALUES
-(1, 'Green', 1);
+CREATE TABLE `bahan_baku` (
+  `id_bahan` int NOT NULL,
+  `nama_bahan` varchar(255) NOT NULL,
+  `stok` decimal(10,2) NOT NULL,
+  `satuan` varchar(50) NOT NULL,
+  `deskripsi` text,
+  `batas_kritis` decimal(10,2) NOT NULL DEFAULT '10.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
 
 -- --------------------------------------------------------
 
@@ -58,10 +69,10 @@ INSERT INTO `attribute_value` (`id`, `value`, `attribute_parent_id`) VALUES
 --
 
 CREATE TABLE `brands` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `active` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -70,10 +81,11 @@ CREATE TABLE `brands` (
 --
 
 CREATE TABLE `categories` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `active` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
 
 -- --------------------------------------------------------
 
@@ -82,7 +94,7 @@ CREATE TABLE `categories` (
 --
 
 CREATE TABLE `company` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `company_name` varchar(255) NOT NULL,
   `service_charge_value` varchar(255) NOT NULL,
   `vat_charge_value` varchar(255) NOT NULL,
@@ -91,14 +103,8 @@ CREATE TABLE `company` (
   `country` varchar(255) NOT NULL,
   `message` text NOT NULL,
   `currency` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
---
--- Dumping data for table `company`
---
-
-INSERT INTO `company` (`id`, `company_name`, `service_charge_value`, `vat_charge_value`, `address`, `phone`, `country`, `message`, `currency`) VALUES
-(1, 'Test', '0', '0', 'Madrid', '', 'Spain', 'hello everyone one', 'USD');
 
 -- --------------------------------------------------------
 
@@ -107,10 +113,10 @@ INSERT INTO `company` (`id`, `company_name`, `service_charge_value`, `vat_charge
 --
 
 CREATE TABLE `groups` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `group_name` varchar(255) NOT NULL,
   `permission` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `groups`
@@ -126,7 +132,7 @@ INSERT INTO `groups` (`id`, `group_name`, `permission`) VALUES
 --
 
 CREATE TABLE `orders` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `bill_no` varchar(255) NOT NULL,
   `customer_name` varchar(255) NOT NULL,
   `customer_address` varchar(255) NOT NULL,
@@ -139,9 +145,9 @@ CREATE TABLE `orders` (
   `vat_charge` varchar(255) NOT NULL,
   `net_amount` varchar(255) NOT NULL,
   `discount` varchar(255) NOT NULL,
-  `paid_status` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `paid_status` int NOT NULL,
+  `user_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -150,13 +156,13 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `orders_item` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `order_id` int NOT NULL,
+  `product_id` int NOT NULL,
   `qty` varchar(255) NOT NULL,
   `rate` varchar(255) NOT NULL,
   `amount` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -165,7 +171,7 @@ CREATE TABLE `orders_item` (
 --
 
 CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
   `sku` varchar(255) NOT NULL,
   `price` varchar(255) NOT NULL,
@@ -175,9 +181,25 @@ CREATE TABLE `products` (
   `attribute_value_id` text,
   `brand_id` text NOT NULL,
   `category_id` text NOT NULL,
-  `store_id` int(11) NOT NULL,
-  `availability` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `store_id` int NOT NULL,
+  `availability` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `produksi`
+--
+
+CREATE TABLE `produksi` (
+  `id_produksi` int NOT NULL,
+  `id_produk` int NOT NULL,
+  `jumlah_produksi` int NOT NULL,
+  `tanggal_produksi` datetime NOT NULL,
+  `catatan` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
 
 -- --------------------------------------------------------
 
@@ -186,10 +208,38 @@ CREATE TABLE `products` (
 --
 
 CREATE TABLE `purchases` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `price` varchar(255) NOT NULL,
   `description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resep`
+--
+
+CREATE TABLE `resep` (
+  `id_resep` int NOT NULL,
+  `id_produk` int NOT NULL,
+  `nama_resep` varchar(255) NOT NULL,
+  `keterangan` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resep_detail`
+--
+
+CREATE TABLE `resep_detail` (
+  `id_resep_detail` int NOT NULL,
+  `id_resep` int NOT NULL,
+  `id_bahan` int NOT NULL,
+  `jumlah` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
 
 -- --------------------------------------------------------
 
@@ -198,10 +248,10 @@ CREATE TABLE `purchases` (
 --
 
 CREATE TABLE `stores` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `active` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -210,15 +260,15 @@ CREATE TABLE `stores` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL,
-  `gender` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `gender` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `users`
@@ -234,10 +284,10 @@ INSERT INTO `users` (`id`, `username`, `password`, `email`, `firstname`, `lastna
 --
 
 CREATE TABLE `user_group` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `group_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `group_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `user_group`
@@ -261,6 +311,12 @@ ALTER TABLE `attributes`
 --
 ALTER TABLE `attribute_value`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `bahan_baku`
+--
+ALTER TABLE `bahan_baku`
+  ADD PRIMARY KEY (`id_bahan`);
 
 --
 -- Indexes for table `brands`
@@ -305,10 +361,32 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `produksi`
+--
+ALTER TABLE `produksi`
+  ADD PRIMARY KEY (`id_produksi`),
+  ADD KEY `id_produk` (`id_produk`);
+
+--
 -- Indexes for table `purchases`
 --
 ALTER TABLE `purchases`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `resep`
+--
+ALTER TABLE `resep`
+  ADD PRIMARY KEY (`id_resep`),
+  ADD KEY `id_produk` (`id_produk`);
+
+--
+-- Indexes for table `resep_detail`
+--
+ALTER TABLE `resep_detail`
+  ADD PRIMARY KEY (`id_resep_detail`),
+  ADD KEY `id_resep` (`id_resep`),
+  ADD KEY `id_bahan` (`id_bahan`);
 
 --
 -- Indexes for table `stores`
@@ -336,79 +414,127 @@ ALTER TABLE `user_group`
 -- AUTO_INCREMENT for table `attributes`
 --
 ALTER TABLE `attributes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `attribute_value`
 --
 ALTER TABLE `attribute_value`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `bahan_baku`
+--
+ALTER TABLE `bahan_baku`
+  MODIFY `id_bahan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders_item`
 --
 ALTER TABLE `orders_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `produksi`
+--
+ALTER TABLE `produksi`
+  MODIFY `id_produksi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `resep`
+--
+ALTER TABLE `resep`
+  MODIFY `id_resep` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `resep_detail`
+--
+ALTER TABLE `resep_detail`
+  MODIFY `id_resep_detail` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `stores`
 --
 ALTER TABLE `stores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_group`
 --
 ALTER TABLE `user_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `produksi`
+--
+ALTER TABLE `produksi`
+  ADD CONSTRAINT `produksi_ibfk_1` FOREIGN KEY (`id_produk`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `resep`
+--
+ALTER TABLE `resep`
+  ADD CONSTRAINT `resep_ibfk_1` FOREIGN KEY (`id_produk`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `resep_detail`
+--
+ALTER TABLE `resep_detail`
+  ADD CONSTRAINT `resep_detail_ibfk_1` FOREIGN KEY (`id_resep`) REFERENCES `resep` (`id_resep`),
+  ADD CONSTRAINT `resep_detail_ibfk_2` FOREIGN KEY (`id_bahan`) REFERENCES `bahan_baku` (`id_bahan`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
